@@ -1,0 +1,22 @@
+{
+  "name": "web-lab-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run start:all",
+    "start:all": "concurrently \"npm run start:user\" \"npm run start:gateway\"",
+    "start:user": "npm --prefix ./services/user-service run start",
+    "start:gateway": "npm --prefix ./services/api-gateway run start",
+    "dev": "npm run dev:all",
+    "dev:all": "concurrently \"npm run dev:user\" \"npm run dev:gateway\"",
+    "dev:user": "npm --prefix ./services/user-service run dev",
+    "dev:gateway": "npm --prefix ./services/api-gateway run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
