@@ -10,10 +10,17 @@
     "dev": "npm run dev:all",
     "dev:all": "concurrently \"npm run dev:user\" \"npm run dev:gateway\"",
     "dev:user": "npm --prefix ./services/user-service run dev",
-    "dev:gateway": "npm --prefix ./services/api-gateway run dev"
+    "dev:gateway": "npm --prefix ./services/api-gateway run dev",
+    "lint": "eslint --max-warnings=0"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "concurrently": "^7.6.0",
+    "eslint": "^9.22.0",
+    "eslint-plugin-import": "^2.31.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
   },
   "keywords": [],
   "author": "",
