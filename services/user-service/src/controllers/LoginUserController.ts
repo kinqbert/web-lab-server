@@ -1,35 +1,38 @@
 import { Request, RequestHandler, Response } from "express";
 import Joi from "joi";
 
+import UserModel from "../models/UserModel";
 import ResponseService from "../services/ResponseService";
-import { createUser } from "../services/UserServices";
 
-const RegisterUserSchema = Joi.object({
-  name: Joi.string().required(),
+const LoginUserSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
-});
+}).unknown(true);
 
-const RegisterUserController: RequestHandler = async (
+const LoginUserController: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
-    const { error } = RegisterUserSchema.validate(req.body);
+    const { error } = LoginUserSchema.validate(req.body);
 
     if (error) {
       ResponseService.error(res, error.message, 400);
       return;
     }
 
-    const newUser = await createUser(name, email, password);
+    const newUser = new UserModel({
+      email,
+      password,
+    });
 
+    await newUser.save();
     ResponseService.success(res, { user: newUser }, 201);
   } catch (error) {
     ResponseService.error(res, (error as Error).message, 500);
   }
 };
 
-export default RegisterUserController;
+export default LoginUserController;
