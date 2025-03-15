@@ -28,7 +28,7 @@ const startServer = async () => {
 
   const PORT = CONFIG.PORT;
   app.listen(PORT, () => {
-    console.log(`User Service listening on port ${PORT}`);
+    console.log(`Listening on port ${PORT}`);
   });
 };
 

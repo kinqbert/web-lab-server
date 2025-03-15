@@ -16,7 +16,7 @@ const startGateway = async () => {
 
   const PORT = CONFIG.PORT || 5050;
   app.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`);
+    console.log(`Listening on port ${PORT}`);
   });
 };
 
