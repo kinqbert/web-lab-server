@@ -4,7 +4,8 @@
     "rootDir": "src",
     "target": "es2017",
     "module": "commonjs",
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true
   },
   "include": ["src"]
 }

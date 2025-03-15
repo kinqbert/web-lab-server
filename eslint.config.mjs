@@ -1,11 +1,11 @@
-import eslint from '@eslint/js';
-import eslintImport from 'eslint-plugin-import';
-import globals from 'globals';
-import eslintTs from 'typescript-eslint';
+import eslint from "@eslint/js";
+import eslintImport from "eslint-plugin-import";
+import globals from "globals";
+import eslintTs from "typescript-eslint";
 
 export default eslintTs.config(
   {
-    ignores: ['**/dist/*', '**/public/unity/*'],
+    ignores: ["**/dist/*", "**/public/unity/*"],
   },
   eslint.configs.recommended,
   ...eslintTs.configs.recommended,
@@ -17,38 +17,44 @@ export default eslintTs.config(
       },
       parser: eslintTs.parser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
+        ecmaVersion: "latest",
+        sourceType: "module",
       },
     },
     plugins: {
-      ['@typescript-eslint']: eslintTs.plugin,
+      ["@typescript-eslint"]: eslintTs.plugin,
       import: eslintImport,
     },
     rules: {
-      'no-shadow': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-shadow': ['error'],
-      'no-use-before-define': 'off',
-      '@typescript-eslint/no-use-before-define': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
+      "no-shadow": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-shadow": ["error"],
+      "no-use-before-define": "off",
+      "@typescript-eslint/no-use-before-define": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
         {
-          caughtErrors: 'none',
+          caughtErrors: "none",
         },
       ],
-      'import/order': [
-        'warn',
+      "import/order": [
+        "warn",
         {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-          'newlines-between': 'always',
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+          ],
+          "newlines-between": "always",
           alphabetize: {
-            order: 'asc',
+            order: "asc",
             caseInsensitive: true,
           },
         },
       ],
-      'no-console': 'warn',
     },
-  },
+  }
 );
