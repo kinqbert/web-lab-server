@@ -8,7 +8,7 @@
     "start:user": "npm --prefix ./services/user-service run start",
     "start:gateway": "npm --prefix ./services/api-gateway run start",
     "dev": "npm run dev:all",
-    "dev:all": "concurrently --prefix [{name}] -n \"USER SERVICE\",\"GATEWAY SERVICE\" \"npm run dev:user\" \"npm run dev:gateway\"",
+    "dev:all": "concurrently --prefix [{name}] -n \"USER SERVICE\",\"GTWY SERVICE\" \"npm run dev:user\" \"npm run dev:gateway\"",
     "dev:user": "npm --prefix ./services/user-service run dev",
     "dev:gateway": "npm --prefix ./services/api-gateway run dev",
     "lint": "eslint --max-warnings=0"
