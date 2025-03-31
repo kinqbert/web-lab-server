@@ -2,13 +2,13 @@ import { Router } from "express";
 
 import { ROUTES } from "../config/routes";
 import CreateTransactionController from "../controllers/CreateTransactionController";
+import DeleteTransactionController from "../controllers/DeleteTransactionController";
+import GetTransactionController from "../controllers/GetTransactionController";
 
 const router = Router();
 
-// імплементуйте всі оці ендпоінти, заготовку я вам дав
 router.post(ROUTES.TRANSACTION.CREATE, CreateTransactionController);
-// router.delete(ROUTES.TRANSACTION.DELETE, CreateTransactionController);
-// router.patch(ROUTES.TRANSACTION.UPDATE, CreateTransactionController);
-// router.get(ROUTES.TRANSACTION.GET, CreateTransactionController);
+router.delete(ROUTES.TRANSACTION.DELETE, DeleteTransactionController);
+router.get(ROUTES.TRANSACTION.GET, GetTransactionController);
 
 export default router;

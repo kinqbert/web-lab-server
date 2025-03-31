@@ -7,7 +7,11 @@ const HealthCheckController: RequestHandler = async (
   res: Response
 ) => {
   try {
-    ResponseService.success(res, { message: "User Service is running" }, 200);
+    ResponseService.success(
+      res,
+      { message: "Transaction Service is running" },
+      200
+    );
   } catch (error) {
     console.error(error);
     ResponseService.error(res, "Failed to check health", 500);

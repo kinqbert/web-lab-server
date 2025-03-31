@@ -1,20 +1,20 @@
 import { Request, RequestHandler, Response } from "express";
 
 import ResponseService from "../services/ResponseService";
-import { createTransaction } from "../services/TransactionServices";
+import { getTransactions } from "../services/TransactionServices";
 
-const CreateTransactionController: RequestHandler = async (
+const GetTransactionController: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const response = await createTransaction(req.body);
+    const response = await getTransactions(req.body);
 
-    ResponseService.success(res, response, 201);
+    ResponseService.success(res, response, 200);
   } catch (error) {
     console.error(error);
     ResponseService.error(res, (error as Error).message);
   }
 };
 
-export default CreateTransactionController;
+export default GetTransactionController;
