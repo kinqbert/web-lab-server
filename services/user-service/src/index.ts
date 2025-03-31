@@ -14,9 +14,7 @@ const startServer = async () => {
 
   try {
     mongoose.set("strictQuery", false);
-    await mongoose.connect(
-      CONFIG.MONGODB_CLUSTER_URL || "mongodb://localhost:27017/user-service"
-    );
+    await mongoose.connect(CONFIG.MONGODB_CLUSTER_URL);
     console.log("Connected to MongoDB!");
   } catch (error) {
     console.error("MongoDB connection error:", error);
