@@ -1,34 +1,26 @@
 {
   "name": "web-lab-server",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
-    "start": "npm run start:all",
-    "start:all": "concurrently \"npm run start:user\" \"npm run start:gateway\"",
-    "start:user": "npm --prefix ./services/user-service run start",
-    "start:gateway": "npm --prefix ./services/api-gateway run start",
-    "start:transaction": "npm --prefix ./services/transaction-service run start",
     "dev": "npm run dev:all",
-    "dev:all": "concurrently --prefix [{name}] -n \"USER SERVICE\",\"GTWY SERVICE\",\"TRNS SERVICE\" \"npm run dev:user\" \"npm run dev:gateway\" \"npm run dev:transaction\"",
+    "dev:all": "concurrently --kill-others-on-fail --prefix-colors red,cyan,green,yellow,magenta --names RABBIT,USER,GTWY,TRNS,GOAL \"npm run rabbit:start\" \"npm run dev:user\" \"npm run dev:gateway\" \"npm run dev:transaction\" \"npm run dev:goal\"",
     "dev:user": "npm --prefix ./services/user-service run dev",
     "dev:gateway": "npm --prefix ./services/api-gateway run dev",
     "dev:transaction": "npm --prefix ./services/transaction-service run dev",
-    "lint": "eslint --max-warnings=0"
+    "dev:goal": "npm --prefix ./services/goal-service run dev",
+    "rabbit:start": "docker compose -f rabbitmq/docker-compose.yml up -d",
+    "rabbit:stop": "docker compose -f rabbitmq/docker-compose.yml down",
+    "lint": "eslint \"services/**/*.ts\" --max-warnings=0"
   },
   "devDependencies": {
-    "@types/morgan": "^1.9.9",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
-    "concurrently": "^7.6.0",
+    "concurrently": "^8.0.0",
     "eslint": "^9.22.0",
     "eslint-plugin-import": "^2.31.0",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "@types/morgan": "^1.9.9"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "joi": "^17.13.3",
     "morgan": "^1.10.0"

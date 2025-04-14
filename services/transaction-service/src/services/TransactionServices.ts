@@ -1,4 +1,5 @@
 import TransactionModel, { ITransaction } from "../models/TransactionModel";
+import { publish } from "../rabbit";
 
 export const createTransaction = async (transactionData: ITransaction) => {
   const { userId, amount, type, category, description, transactionDate } =
@@ -13,6 +14,15 @@ export const createTransaction = async (transactionData: ITransaction) => {
     transactionDate,
   });
 
+  await publish("transactions", "transaction.created", {
+    id: newTransaction._id,
+    userId,
+    amount,
+    type,
+    category,
+    transactionDate,
+  });
+
   return newTransaction;
 };
 
@@ -22,6 +32,8 @@ export const deleteTransaction = async (id: string) => {
   if (!deleted) {
     throw new Error("Transaction not found");
   }
+
+  await publish("transactions", "transaction.deleted", { id });
 };
 
 export const getTransactions = async (options: {

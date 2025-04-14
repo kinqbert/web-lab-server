@@ -6,6 +6,7 @@ import morgan from "morgan";
 import CONFIG from "./config/env";
 import HealthCheckController from "./controllers/HealthController";
 import TransactionRoutes from "./routes";
+import { connectRabbit } from "./rabbit";
 
 const startServer = async () => {
   const app = express();
@@ -18,6 +19,12 @@ const startServer = async () => {
     console.log("Connected to MongoDB!");
   } catch (error) {
     console.error("MongoDB connection error:", error);
+  }
+
+  try {
+    await connectRabbit();
+  } catch (error) {
+    console.error("RabbitMQ connection error:", error);
   }
 
   app.get("/health", HealthCheckController);

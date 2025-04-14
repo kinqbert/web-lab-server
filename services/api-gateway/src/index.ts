@@ -2,13 +2,21 @@ import "dotenv/config";
 import express, { Request, Response } from "express";
 
 import CONFIG from "./config/env";
-import apiRouter from "./routes/UserServiceRoutes";
+import apiRouter from "./routes/UserRoutes";
+
+import userRoutes from "./routes/UserRoutes";
+import transactionRoutes from "./routes/TransactionRoutes";
+import goalRoutes from "./routes/GoalRoutes";
 
 const startGateway = async () => {
   const app = express();
   app.use(express.json());
 
   app.use("/api", apiRouter);
+
+  app.use("/users", userRoutes);
+  app.use("/transactions", transactionRoutes);
+  app.use("/goals", goalRoutes);
 
   app.get("/health", (req: Request, res: Response) => {
     res.json({ message: "API Gateway is running" });

@@ -1,12 +1,10 @@
-import axios from "axios";
 import { Router } from "express";
-
+import axios from "axios";
 import CONFIG from "../config/env";
 import { ROUTES } from "../config/routes";
 import ResponseService from "../services/ResponseService";
 
 const router = Router();
-
 const USER_SERVICE_URL = CONFIG.USER_SERVICE_URL || "http://localhost:5051";
 
 router.post(ROUTES.USERS.REGISTER, async (req, res) => {
@@ -17,7 +15,11 @@ router.post(ROUTES.USERS.REGISTER, async (req, res) => {
     );
     ResponseService.success(res, response.data, response.status);
   } catch (error: any) {
-    ResponseService.error(res, error.response.data.error, 500);
+    ResponseService.error(
+      res,
+      error.response?.data?.error || "User service error",
+      500
+    );
   }
 });
 
@@ -29,7 +31,11 @@ router.post(ROUTES.USERS.LOGIN, async (req, res) => {
     );
     ResponseService.success(res, response.data, response.status);
   } catch (error: any) {
-    ResponseService.error(res, error.response.data.error, 500);
+    ResponseService.error(
+      res,
+      error.response?.data?.error || "User service error",
+      500
+    );
   }
 });
 
