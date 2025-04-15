@@ -1,20 +1,28 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
+import cors from "cors";
 
 import CONFIG from "./config/env";
-import apiRouter from "./routes/UserRoutes";
 
 import userRoutes from "./routes/UserRoutes";
 import transactionRoutes from "./routes/TransactionRoutes";
 import goalRoutes from "./routes/GoalRoutes";
+import { verifyJWT } from "./middlewares/verifyJWT";
 
 const startGateway = async () => {
   const app = express();
+
+  app.use(
+    cors({
+      origin: CONFIG.CLIENT_URL,
+      credentials: true,
+    })
+  );
   app.use(express.json());
 
-  app.use("/api", apiRouter);
-
   app.use("/users", userRoutes);
+
+  app.use(verifyJWT);
   app.use("/transactions", transactionRoutes);
   app.use("/goals", goalRoutes);
 

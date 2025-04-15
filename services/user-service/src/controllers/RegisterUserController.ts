@@ -3,6 +3,8 @@ import Joi from "joi";
 
 import ResponseService from "../services/ResponseService";
 import { createUser } from "../services/UserServices";
+import { signAccess, signRefresh } from "../utils/jwt";
+import RefreshTokenModel from "../models/RefreshTokenModel";
 
 const RegisterUserSchema = Joi.object({
   name: Joi.string().required(),
@@ -26,9 +28,25 @@ const RegisterUserController: RequestHandler = async (
 
     const user = await createUser(name, email, password);
 
-    ResponseService.success(res, { id: user._id, name: user.name }, 201);
+    const accessToken = signAccess({ id: user._id });
+    const refreshToken = signRefresh({ id: user._id });
+
+    await RefreshTokenModel.create({
+      userId: user._id,
+      token: refreshToken,
+      expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 30,
+    });
+
+    res
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        secure: false,
+      })
+      .json({ accessToken, user: { id: user._id, name: user.name } });
   } catch (error) {
-    ResponseService.error(res, (error as Error).message, 500);
+    ResponseService.error(res, (error as Error).message, 400);
   }
 };
 

@@ -1,20 +1,47 @@
 import UserModel from "../models/UserModel";
+import bcrypt from "bcryptjs";
 
 export const createUser = async (
   name: string,
   email: string,
   password: string
 ) => {
+  const [result] = await UserModel.aggregate([
+    {
+      $facet: {
+        matchedEmailUser: [{ $match: { email } }, { $limit: 1 }],
+        matchedNameUser: [{ $match: { name } }, { $limit: 1 }],
+      },
+    },
+    {
+      $project: {
+        matchedEmailUser: { $arrayElemAt: ["$matchedEmailUser", 0] },
+        matchedNameUser: { $arrayElemAt: ["$matchedNameUser", 0] },
+      },
+    },
+  ]);
+
+  console.log(result);
+
+  if (result.matchedNameUser) {
+    throw new Error("User with such username already exists.");
+  }
+
+  if (result.matchedEmailUser) {
+    throw new Error("User with such email already exists.");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const newUser = await UserModel.create({
     name,
     email,
-    password,
+    password: hashedPassword,
   });
 
   return newUser;
 };
 
-// TODO -- макс, ти там казав за jwt чи шось таке, можливо це тут потрібно буде
 export const loginUser = async (email: string, password: string) => {
   const user = await UserModel.find({ email, password });
 
