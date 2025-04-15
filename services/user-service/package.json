@@ -9,12 +9,14 @@
   },
   "dependencies": {
     "amqplib": "^0.10.7",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "mongoose": "^6.8.0"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.7",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/joi": "^17.2.2",
     "@types/morgan": "^1.9.9",

@@ -24,9 +24,9 @@ const RegisterUserController: RequestHandler = async (
       return;
     }
 
-    const newUser = await createUser(name, email, password);
+    const user = await createUser(name, email, password);
 
-    ResponseService.success(res, { user: newUser }, 201);
+    ResponseService.success(res, { id: user._id, name: user.name }, 201);
   } catch (error) {
     ResponseService.error(res, (error as Error).message, 500);
   }
