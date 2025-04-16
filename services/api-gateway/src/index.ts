@@ -20,15 +20,13 @@ const startGateway = async () => {
   );
   app.use(express.json());
 
-  app.use("/users", userRoutes);
-
-  app.use(verifyJWT);
-  app.use("/transactions", transactionRoutes);
-  app.use("/goals", goalRoutes);
-
   app.get("/health", (req: Request, res: Response) => {
     res.json({ message: "API Gateway is running" });
   });
+
+  app.use("/users", userRoutes);
+  app.use("/transactions", verifyJWT, transactionRoutes);
+  app.use("/goals", verifyJWT, goalRoutes);
 
   const PORT = CONFIG.PORT || 5050;
   app.listen(PORT, () => {
