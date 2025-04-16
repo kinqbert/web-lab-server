@@ -1,5 +1,6 @@
 import TransactionModel, { ITransaction } from "../models/TransactionModel";
 import { publish } from "../rabbit";
+import { TRANSACTION_TYPE } from "../types/TransactionType";
 
 export const createTransaction = async (transactionData: ITransaction) => {
   const { userId, amount, type, category, description, transactionDate } =
@@ -58,4 +59,107 @@ export const getTransactions = async (options: {
   const transactions = await query.exec();
 
   return transactions;
+};
+
+export const getAnalyticsSummary = async (userId: string) => {
+  const start = new Date();
+  start.setDate(1);
+  start.setHours(0, 0, 0, 0);
+
+  const [result] = await TransactionModel.aggregate([
+    { $match: { userId } },
+    {
+      $facet: {
+        allTime: [
+          {
+            $group: {
+              _id: "$type",
+              total: { $sum: "$amount" },
+            },
+          },
+        ],
+        month: [
+          { $match: { transactionDate: { $gte: start } } },
+          {
+            $group: {
+              _id: "$type",
+              total: { $sum: "$amount" },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+
+  const incomeAll =
+    result.allTime.find((x) => x._id === TRANSACTION_TYPE.INCOME)?.total || 0;
+  const expenseAll =
+    result.allTime.find((x) => x._id === "expense")?.total || 0;
+  const incomeMonth =
+    result.month.find((x) => x._id === TRANSACTION_TYPE.INCOME)?.total || 0;
+  const expenseMonth =
+    result.month.find((x) => x._id === "expense")?.total || 0;
+
+  return {
+    balance: incomeAll - expenseAll,
+    incomeMonth,
+    expenseMonth,
+  };
+};
+
+export const getAnalyticsCategories = async (userId: string) => {
+  const start = new Date();
+  start.setDate(1);
+  start.setHours(0, 0, 0, 0);
+
+  const data = await TransactionModel.aggregate([
+    {
+      $match: {
+        userId,
+        type: TRANSACTION_TYPE.EXPENSE,
+        transactionDate: { $gte: start },
+      },
+    },
+    { $group: { _id: "$category", total: { $sum: "$amount" } } },
+    { $project: { _id: 0, category: "$_id", total: 1 } },
+    { $sort: { total: -1 } },
+  ]);
+
+  return data;
+};
+
+export const getAnalyticsTimeline = async (userId: string) => {
+  const start = new Date();
+  start.setDate(start.getDate() - 29);
+  start.setHours(0, 0, 0, 0);
+
+  const data = await TransactionModel.aggregate([
+    { $match: { userId, transactionDate: { $gte: start } } },
+    {
+      $group: {
+        _id: {
+          day: {
+            $dateToString: { format: "%Y-%m-%d", date: "$transactionDate" },
+          },
+          type: "$type",
+        },
+        total: { $sum: "$amount" },
+      },
+    },
+    {
+      $group: {
+        _id: "$_id.day",
+        income: {
+          $sum: { $cond: [{ $eq: ["$_id.type", "income"] }, "$total", 0] },
+        },
+        expense: {
+          $sum: { $cond: [{ $eq: ["$_id.type", "expense"] }, "$total", 0] },
+        },
+      },
+    },
+    { $project: { _id: 0, date: "$_id", income: 1, expense: 1 } },
+    { $sort: { date: 1 } },
+  ]);
+
+  return data;
 };

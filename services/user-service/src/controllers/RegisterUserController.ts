@@ -34,17 +34,13 @@ const RegisterUserController: RequestHandler = async (
     await RefreshTokenModel.create({
       userId: user._id,
       token: refreshToken,
-      expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 30,
     });
 
-    res
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        sameSite: "lax",
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        secure: false,
-      })
-      .json({ accessToken, user: { id: user._id, name: user.name } });
+    ResponseService.success(res, {
+      accessToken,
+      refreshToken,
+      user: { id: user._id, name: user.name },
+    });
   } catch (error) {
     ResponseService.error(res, (error as Error).message, 400);
   }

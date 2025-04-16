@@ -1,5 +1,4 @@
 import { Request, RequestHandler, Response } from "express";
-import Joi from "joi";
 
 import ResponseService from "../services/ResponseService";
 import { signAccess, verifyRefresh } from "../utils/jwt";
@@ -9,25 +8,22 @@ const RefreshTokenController: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    ResponseService.error(res, "No refresh token", 401);
+    return;
+  }
+
   try {
-    const token = req.cookies.refreshToken;
-    if (!token) {
-      ResponseService.error(res, "No refresh token", 401);
-      return;
-    }
+    const payload = verifyRefresh(refreshToken) as { id: string };
+    const saved = await RefreshTokenModel.findOne({ token: refreshToken });
 
-    try {
-      const payload = verifyRefresh(token) as { id: string };
-      const saved = await RefreshTokenModel.findOne({ token });
-      if (!saved) throw new Error("Not found");
+    if (!saved) throw new Error("not found");
 
-      const newAccess = signAccess({ id: payload.id });
-      res.json({ accessToken: newAccess });
-    } catch {
-      ResponseService.error(res, "Invalid refresh", 401);
-    }
-  } catch (error) {
-    ResponseService.error(res, (error as Error).message, 500);
+    const newAccess = signAccess({ id: payload.id });
+    ResponseService.success(res, { accessToken: newAccess });
+  } catch (e) {
+    ResponseService.error(res, "Invalid refresh", 498);
   }
 };
 

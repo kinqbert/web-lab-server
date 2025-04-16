@@ -1,9 +1,10 @@
 import mongoose, { Schema } from "mongoose";
+import { TRANSACTION_TYPE } from "../types/TransactionType";
 
 export interface ITransaction {
   userId: string;
   amount: number;
-  type: "income" | "expense";
+  type: TRANSACTION_TYPE;
   category: string;
   description?: string;
   transactionDate: Date;
@@ -15,7 +16,7 @@ const TransactionSchema: Schema = new Schema({
   amount: { type: Number, required: true },
   type: {
     type: String,
-    enum: ["income", "expense"],
+    enum: TRANSACTION_TYPE,
     required: true,
   },
   category: { type: String, required: true },

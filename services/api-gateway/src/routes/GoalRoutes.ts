@@ -4,7 +4,7 @@ import CONFIG from "../config/env";
 import ResponseService from "../services/ResponseService";
 
 const router = Router();
-const GOAL_SERVICE_URL = CONFIG.GOAL_SERVICE_URL || "http://localhost:3003";
+const GOAL_SERVICE_URL = CONFIG.GOAL_SERVICE_URL;
 
 router.post("/", async (req, res) => {
   try {

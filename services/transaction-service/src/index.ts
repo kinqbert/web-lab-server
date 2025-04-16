@@ -29,7 +29,7 @@ const startServer = async () => {
 
   app.get("/health", HealthCheckController);
 
-  app.use("/transaction", TransactionRoutes);
+  app.use("/transactions", TransactionRoutes);
 
   const PORT = CONFIG.PORT;
   app.listen(PORT, () => {
