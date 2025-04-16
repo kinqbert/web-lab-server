@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import morgan from "morgan";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import CONFIG from "./config/env";
 import HealthCheckController from "./controllers/HealthController";

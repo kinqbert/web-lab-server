@@ -21,6 +21,7 @@ const RefreshTokenController: RequestHandler = async (
     if (!saved) throw new Error("not found");
 
     const newAccess = signAccess({ id: payload.id });
+
     ResponseService.success(res, { accessToken: newAccess });
   } catch (e) {
     ResponseService.error(res, "Invalid refresh", 498);
