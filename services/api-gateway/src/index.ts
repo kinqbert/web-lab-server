@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import CONFIG from "./config/env";
 
@@ -19,6 +20,7 @@ const startGateway = async () => {
     })
   );
   app.use(express.json());
+  app.use(cookieParser());
 
   app.get("/health", (req: Request, res: Response) => {
     res.json({ message: "API Gateway is running" });
