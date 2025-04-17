@@ -20,4 +20,25 @@ router.post("/refresh", (req, res) => {
   proxyRequest(req, res, "post", `${BASE}/refresh`, { data: req.body });
 });
 
+router.post("/logout", async (req, res) => {
+  res
+    .clearCookie("accessToken", {
+      sameSite: "lax",
+      httpOnly: true,
+      secure: false,
+      path: "/",
+    })
+    .clearCookie("refreshToken", {
+      sameSite: "lax",
+      httpOnly: true,
+      secure: false,
+      path: "/",
+    });
+
+  const refreshToken = req.cookies.refreshToken;
+  await proxyRequest(req, res, "post", `${BASE}/logout`, {
+    data: { refreshToken },
+  });
+});
+
 export default router;

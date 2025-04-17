@@ -3,8 +3,8 @@ import express from "express";
 import mongoose from "mongoose";
 import goalRoutes from "./routes";
 import CONFIG from "./config/env";
-import { transactionEventHandler } from "./events";
-import { connectRabbit, subscribe } from "./rabbit";
+import { listenTransactions } from "./events";
+import { connectRabbit } from "./rabbit";
 
 const startServer = async () => {
   const app = express();
@@ -15,12 +15,7 @@ const startServer = async () => {
 
   await connectRabbit();
 
-  await subscribe(
-    "transactions",
-    "transaction.*",
-    "goal-queue",
-    transactionEventHandler
-  );
+  await listenTransactions();
 
   app.use("/goals", goalRoutes);
 

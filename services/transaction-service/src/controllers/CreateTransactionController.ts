@@ -7,8 +7,10 @@ const CreateTransactionController: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
+  const userId = req.headers["x-user-id"] as string;
+
   try {
-    const response = await createTransaction(req.body);
+    const response = await createTransaction(req.body, userId);
 
     ResponseService.success(res, response, 201);
   } catch (error) {

@@ -2,8 +2,11 @@ import TransactionModel, { ITransaction } from "../models/TransactionModel";
 import { publish } from "../rabbit";
 import { TRANSACTION_TYPE } from "../types/TransactionType";
 
-export const createTransaction = async (transactionData: ITransaction) => {
-  const { userId, amount, type, category, description, transactionDate } =
+export const createTransaction = async (
+  transactionData: ITransaction & { goalId?: string },
+  userId: string
+) => {
+  const { amount, type, category, description, transactionDate, goalId } =
     transactionData;
 
   const newTransaction = await TransactionModel.create({
@@ -22,6 +25,7 @@ export const createTransaction = async (transactionData: ITransaction) => {
     type,
     category,
     transactionDate,
+    goalId: goalId ?? null,
   });
 
   return newTransaction;
@@ -70,14 +74,6 @@ export const getAnalyticsSummary = async (userId: string) => {
     { $match: { userId } },
     {
       $facet: {
-        allTime: [
-          {
-            $group: {
-              _id: "$type",
-              total: { $sum: "$amount" },
-            },
-          },
-        ],
         month: [
           { $match: { transactionDate: { $gte: start } } },
           {
@@ -91,17 +87,13 @@ export const getAnalyticsSummary = async (userId: string) => {
     },
   ]);
 
-  const incomeAll =
-    result.allTime.find((x) => x._id === TRANSACTION_TYPE.INCOME)?.total || 0;
-  const expenseAll =
-    result.allTime.find((x) => x._id === "expense")?.total || 0;
   const incomeMonth =
     result.month.find((x) => x._id === TRANSACTION_TYPE.INCOME)?.total || 0;
   const expenseMonth =
     result.month.find((x) => x._id === "expense")?.total || 0;
 
   return {
-    balance: incomeAll - expenseAll,
+    balance: incomeMonth - expenseMonth,
     incomeMonth,
     expenseMonth,
   };

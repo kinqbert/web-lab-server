@@ -7,8 +7,10 @@ const CreateGoalController: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
+  const userId = req.headers["x-user-id"] as string;
+
   try {
-    const response = await createGoal(req.body);
+    const response = await createGoal(req.body, userId);
 
     ResponseService.success(res, response, 201);
   } catch (error) {

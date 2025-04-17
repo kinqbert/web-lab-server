@@ -1,6 +1,8 @@
 import amqp, { Channel } from "amqplib";
 import CONFIG from "./config/env";
 
+import GoalModel from "./models/GoalModel";
+
 let channel: Channel;
 
 export async function connectRabbit() {

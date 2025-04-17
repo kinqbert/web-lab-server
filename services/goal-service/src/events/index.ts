@@ -1,25 +1,35 @@
 import GoalModel from "../models/GoalModel";
+import { subscribe } from "../rabbit";
+import { GOAL_STATUS } from "../types/GoalStatus";
 
-export const transactionEventHandler = async (event: {
-  userId: any;
-  amount: any;
-  type: string;
-}) => {
-  if (!event || !event.userId || !event.amount) return;
+export async function listenTransactions() {
+  await subscribe(
+    "transactions",
+    "transaction.created",
+    "goal-service-tx",
+    async (payload) => {
+      const { goalId, userId, amount, type } = payload;
 
-  if (event.type !== "income") return;
+      if (!goalId || type !== "income") return;
 
-  const goals = await GoalModel.updateMany(
-    { userId: event.userId, status: "in_progress" },
-    { $inc: { currentAmount: event.amount } }
+      const goal = await GoalModel.findOneAndUpdate(
+        { _id: goalId, userId },
+        {
+          $inc: { currentAmount: amount },
+        },
+        { new: true }
+      );
+
+      if (!goal) return;
+
+      if (
+        goal.status === "in_progress" &&
+        goal.currentAmount >= goal.targetAmount
+      ) {
+        goal.status = GOAL_STATUS.COMPLETED;
+      }
+
+      await goal.save();
+    }
   );
-
-  await GoalModel.updateMany(
-    {
-      userId: event.userId,
-      status: "in_progress",
-      $expr: { $gte: ["$currentAmount", "$targetAmount"] },
-    },
-    { $set: { status: "completed" } }
-  );
-};
+}

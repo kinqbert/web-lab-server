@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { GOAL_STATUS } from "../types/GoalStatus";
 
 export interface IGoal {
   _id: string;
@@ -7,7 +8,7 @@ export interface IGoal {
   targetAmount: number;
   currentAmount: number;
   deadline: Date;
-  status: "in_progress" | "completed" | "failed";
+  status: GOAL_STATUS;
   createdAt: Date;
 }
 
@@ -19,8 +20,8 @@ const GoalSchema = new Schema({
   deadline: { type: Date },
   status: {
     type: String,
-    enum: ["in_progress", "completed", "failed"],
-    default: "in_progress",
+    enum: GOAL_STATUS,
+    default: GOAL_STATUS.IN_PROGRESS,
   },
   createdAt: { type: Date, default: Date.now },
 });

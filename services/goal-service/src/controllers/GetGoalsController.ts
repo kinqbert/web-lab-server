@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 
-import { getGoals, updateGoal } from "../services/GoalServices";
+import { getGoals } from "../services/GoalServices";
 import ResponseService from "../services/ResponseService";
 
 const GetGoalsController: RequestHandler = async (
