@@ -13,8 +13,8 @@ router.put("/:id", (req, res) => {
   proxyRequest(req, res, "put", `${BASE}/${req.params.id}`, { data: req.body });
 });
 
-router.get("/:userId", (req, res) => {
-  proxyRequest(req, res, "get", `${BASE}/${req.params.userId}`);
+router.get("/", (req, res) => {
+  proxyRequest(req, res, "get", `${BASE}`);
 });
 
 export default router;

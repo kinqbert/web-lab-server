@@ -3,10 +3,13 @@ import { verifyAccess } from "../utils/jwt";
 import ResponseService from "../services/ResponseService";
 
 export const verifyJWT: RequestHandler = (req, res, next) => {
-  const token = req.cookies?.accessToken;
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : req.cookies?.accessToken;
 
   if (!token) {
-    ResponseService.error(res, "No token", 401);
+    ResponseService.error(res, "No token provided", 401);
     return;
   }
 
@@ -16,5 +19,6 @@ export const verifyJWT: RequestHandler = (req, res, next) => {
     next();
   } catch {
     ResponseService.error(res, "Token invalid/expired", 401);
+    return;
   }
 };

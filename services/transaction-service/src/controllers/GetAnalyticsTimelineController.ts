@@ -7,7 +7,7 @@ const GetAnalyticsTimelineController: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const userId = (req as any).userId;
+  const userId = req.headers["x-user-id"] as string;
 
   try {
     const response = await getAnalyticsTimeline(userId);

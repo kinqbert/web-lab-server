@@ -22,8 +22,4 @@ export const transactionEventHandler = async (event: {
     },
     { $set: { status: "completed" } }
   );
-
-  console.log(
-    `🎯 Updated ${goals.modifiedCount} goal(s) for user ${event.userId}`
-  );
 };

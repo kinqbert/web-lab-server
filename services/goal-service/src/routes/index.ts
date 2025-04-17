@@ -7,6 +7,6 @@ const router = Router();
 
 router.post("/", CreateGoalController);
 router.put("/:id", UpdateGoalController);
-router.get("/:userId", GetGoalsController);
+router.get("/", GetGoalsController);
 
 export default router;

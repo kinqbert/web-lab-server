@@ -21,8 +21,6 @@ export const createUser = async (
     },
   ]);
 
-  console.log(result);
-
   if (result.matchedNameUser) {
     throw new Error("User with such username already exists.");
   }

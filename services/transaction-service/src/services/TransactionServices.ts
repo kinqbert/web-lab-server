@@ -112,14 +112,12 @@ export const getAnalyticsCategories = async (userId: string) => {
   start.setDate(1);
   start.setHours(0, 0, 0, 0);
 
-  console.log(userId);
-
   const data = await TransactionModel.aggregate([
     {
       $match: {
         userId,
-        // type: TRANSACTION_TYPE.EXPENSE,
-        // transactionDate: { $gte: start },
+        type: TRANSACTION_TYPE.EXPENSE,
+        transactionDate: { $gte: start },
       },
     },
     { $group: { _id: "$category", total: { $sum: "$amount" } } },
@@ -127,14 +125,12 @@ export const getAnalyticsCategories = async (userId: string) => {
     { $sort: { total: -1 } },
   ]);
 
-  console.log(data);
-
   return data;
 };
 
 export const getAnalyticsTimeline = async (userId: string) => {
   const start = new Date();
-  start.setDate(start.getDate() - 29);
+  start.setDate(1);
   start.setHours(0, 0, 0, 0);
 
   const data = await TransactionModel.aggregate([
