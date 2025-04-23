@@ -70,7 +70,7 @@ export const getAnalyticsSummary = async (userId: string) => {
   start.setDate(1);
   start.setHours(0, 0, 0, 0);
 
-  const [result] = await TransactionModel.aggregate([
+  const aggResult = await TransactionModel.aggregate([
     { $match: { userId } },
     {
       $facet: {
@@ -86,6 +86,10 @@ export const getAnalyticsSummary = async (userId: string) => {
       },
     },
   ]);
+
+  const result = aggResult[0] as {
+    month: (ITransaction & { _id: string; total: number })[];
+  };
 
   const incomeMonth =
     result.month.find((x) => x._id === TRANSACTION_TYPE.INCOME)?.total || 0;

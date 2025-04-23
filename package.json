@@ -10,16 +10,24 @@
     "dev:goal": "npm --prefix ./services/goal-service run dev",
     "rabbit:start": "docker compose -f rabbitmq/docker-compose.yml up -d",
     "rabbit:stop": "docker compose -f rabbitmq/docker-compose.yml down",
-    "lint": "eslint \"services/**/*.ts\" --max-warnings=0"
+    "lint": "eslint \"services/**/*.ts\" --max-warnings=0",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/morgan": "^1.9.9",
+    "@types/supertest": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
     "concurrently": "^8.0.0",
     "eslint": "^9.22.0",
     "eslint-plugin-import": "^2.31.0",
-    "typescript": "^5.8.2",
-    "@types/morgan": "^1.9.9"
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.4",
+    "supertest": "^7.1.0",
+    "ts-jest": "^29.3.2",
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "joi": "^17.13.3",

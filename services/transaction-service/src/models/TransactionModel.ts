@@ -8,7 +8,6 @@ export interface ITransaction {
   category: string;
   description?: string;
   transactionDate: Date;
-  createdAt: Date;
 }
 
 const TransactionSchema: Schema = new Schema({
@@ -22,7 +21,6 @@ const TransactionSchema: Schema = new Schema({
   category: { type: String, required: true },
   description: { type: String },
   transactionDate: { type: Date, default: Date.now },
-  createdAt: { type: Date, default: Date.now },
 });
 
 export default mongoose.model<ITransaction>("transactions", TransactionSchema);

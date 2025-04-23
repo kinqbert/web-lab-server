@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPattern": "/goals/.+"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "message": "Goal updated"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

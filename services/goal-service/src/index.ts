@@ -6,8 +6,9 @@ import CONFIG from "./config/env";
 import { listenTransactions } from "./events";
 import { connectRabbit } from "./rabbit";
 
+export const app = express();
+
 const startServer = async () => {
-  const app = express();
   app.use(express.json());
 
   await mongoose.connect(CONFIG.MONGODB_CLUSTER_URL);

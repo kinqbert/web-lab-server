@@ -1,4 +1,5 @@
-import amqp, { Channel } from "amqplib";
+import * as amqp from "amqplib";
+import { Channel } from "amqplib";
 import CONFIG from "./config/env";
 
 let channel: Channel;
