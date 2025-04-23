@@ -1,5 +1,8 @@
 import UserModel from "../models/UserModel";
 import bcrypt from "bcryptjs";
+import { signAccess, signRefresh } from "../utils/jwt";
+import RefreshTokenModel from "../models/RefreshTokenModel";
+import Joi from "joi";
 
 export const createUser = async (
   name: string,
@@ -40,12 +43,45 @@ export const createUser = async (
   return newUser;
 };
 
-export const loginUser = async (email: string, password: string) => {
-  const user = await UserModel.find({ email, password });
+const LoginUserSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).required(),
+}).unknown(true);
 
-  if (!user) {
-    throw new Error("User not found");
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<{
+  accessToken: string;
+  refreshToken: string;
+  user: { id: string; name: string };
+}> => {
+  const { error } = LoginUserSchema.validate({ email, password });
+
+  if (error) {
+    throw new Error(error.message);
   }
 
-  return user;
+  const user = await UserModel.findOne({ email });
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw new Error("Invalid credentials");
+  }
+
+  const accessToken = signAccess({ id: user._id });
+  const refreshToken = signRefresh({ id: user._id });
+
+  await RefreshTokenModel.create({
+    userId: user._id,
+    token: refreshToken,
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+    user: {
+      id: user._id.toString(),
+      name: user.name,
+    },
+  };
 };

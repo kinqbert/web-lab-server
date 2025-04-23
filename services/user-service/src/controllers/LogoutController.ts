@@ -3,10 +3,12 @@ import RefreshTokenModel from "../models/RefreshTokenModel";
 import ResponseService from "../../../transaction-service/src/services/ResponseService";
 
 export const LogoutUserController: RequestHandler = async (req, res) => {
-  const userId = req.headers["x-user-id"] as string;
+  const refreshToken = req.body.refreshToken as string | undefined;
 
-  if (userId) {
-    await RefreshTokenModel.deleteOne({ userId }).catch(() => null);
+  if (refreshToken) {
+    await RefreshTokenModel.deleteOne({ token: refreshToken }).catch(
+      () => null
+    );
   }
 
   ResponseService.success(res, {}, 204);
