@@ -1,3 +1,5 @@
+// jest.setTimeout(60000);
+
 import mongoose from "mongoose";
 import { createUser, loginUser } from "../services/UserServices";
 import UserModel from "../models/UserModel";

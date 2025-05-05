@@ -89,13 +89,14 @@ describe("TransactionServices", () => {
       const sortMock = jest.fn().mockReturnValue({ exec: execMock });
       (TransactionModel.find as jest.Mock).mockReturnValue({ sort: sortMock });
 
-      const transactions = await getTransactions({
+      const transactions = await getTransactions("user123", {
         type: TRANSACTION_TYPE.INCOME,
         category: "Salary",
         sort: "desc",
       });
 
       expect(TransactionModel.find).toHaveBeenCalledWith({
+        userId: "user123",
         type: TRANSACTION_TYPE.INCOME,
         category: "Salary",
       });
