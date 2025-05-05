@@ -41,14 +41,19 @@ export const deleteTransaction = async (id: string) => {
   await publish("transactions", "transaction.deleted", { id });
 };
 
-export const getTransactions = async (options: {
-  sort: "asc" | "desc";
-  category: string;
-  type: string;
-}) => {
+export const getTransactions = async (
+  userId: string,
+  options: {
+    sort: "asc" | "desc";
+    category: string;
+    type: string;
+  }
+) => {
   const { type, category, sort } = options;
 
-  const filter: any = {};
+  const filter: any = {
+    userId,
+  };
   if (type) filter.type = type;
   if (category) filter.category = category;
 
