@@ -1,6 +1,6 @@
 import { Router } from "express";
 import CreateGoalController from "../controllers/CreateGoalController";
-import UpdateGoalController from "../controllers/updateGoalController";
+import UpdateGoalController from "../controllers/UpdateGoalController";
 import GetGoalsController from "../controllers/GetGoalsController";
 
 const router = Router();
